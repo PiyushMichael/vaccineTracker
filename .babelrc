@@ -1,0 +1,11 @@
+{
+  "presets": ["react-app"],
+  "plugins": [
+    ["module-resolver", {
+      "root": ["./public"],
+      "alias": {
+        "text": "./text",
+      }
+    }],
+  ],
+}
