@@ -11,7 +11,6 @@ export const getAppointmentsHelper = async (pins, days) => {
    for (const code of pinCodes) {
     for (const date of dates) {
       const res = await getAppointmentsApi(code, date);
-      console.log(res);
       results = [...results, ...res.data.sessions];
     };
   };

@@ -39,17 +39,17 @@ const App = () => {
   const [expanded, setExpanded] = useState([]);
   const [eighteenPlus, setEighteenPlus] = useState(false);
   const [error, setError] = useState(false);
-  const [pinLookupModal, setPinLookupModal] = useState(false);
+  const [pinLookupModal, setPinLookupModal] = useState(true);
   const [loading, setLoading] = useState(true);
   const [showEmpty, setShowEmpty] = useState(false);
 
   useEffect(() => {
-    const pinLookup = localStorage.getItem(PIN_LOOKUP);
-    if (pinLookup === 'true') {
-      setPinLookupModal(false);
-    } else {
-      setPinLookupModal(true);
-    }
+    // const pinLookup = localStorage.getItem(PIN_LOOKUP);
+    // if (pinLookup === 'true') {
+    //   setPinLookupModal(false);
+    // } else {
+    //   setPinLookupModal(true);
+    // }
     setTimeout(() => {
       setLoading(false);
     }, 1000);
@@ -138,7 +138,7 @@ const App = () => {
         {filteredAppointments.map((appointment, index) => (
           <Card
             key={index.toString()}
-            style={{ marginTop: 32, maxWidth: 400 }}
+            style={{marginTop: 32, maxWidth: 400, cursor: 'pointer'}}
             onClick={() => {
               const temp =[...expanded];
               temp[index] = !temp[index];
@@ -168,7 +168,7 @@ const App = () => {
             </Box>
             <Collapse in={expanded[index]} timeout="auto" unmountOnExit>
               <CardContent>
-                <Typography style={{marginTop: -20}} variant="subtitle2">Doses: {appointment.available_capacity}</Typography>
+                <Typography style={{marginTop: -20}} variant="subtitle2">Doses: {appointment.available_capacity} ({appointment.vaccine})</Typography>
                 <Box display="flex" flexDirection="column">
                   {appointment.slots.map((slot, id) => (
                     <Typography variant="caption" key={`${index}-${id}`}>{slot}</Typography>
