@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import '../App.css';
 import moment from 'moment';
 import {Box, TextField, Button, Typography, Card, CardHeader, CardContent, Collapse, IconButton, Checkbox, Snackbar} from '@material-ui/core';
-import {Alert, AlertTitle} from '@material-ui/lab';
+import {Alert, AlertTitle, Skeleton} from '@material-ui/lab';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -40,6 +40,8 @@ const App = () => {
   const [eighteenPlus, setEighteenPlus] = useState(false);
   const [error, setError] = useState(false);
   const [pinLookupModal, setPinLookupModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [showEmpty, setShowEmpty] = useState(false);
 
   useEffect(() => {
     const pinLookup = localStorage.getItem(PIN_LOOKUP);
@@ -48,6 +50,9 @@ const App = () => {
     } else {
       setPinLookupModal(true);
     }
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   }, []);
 
   const setPinCodes = (val) => {
@@ -64,13 +69,17 @@ const App = () => {
       setError(true);
       return;
     }
+    setLoading(true);
     const results = await getAppointmentsHelper(pins, days);
     setAppointments(results);
+    setLoading(false);
+    setShowEmpty(true);
   };
 
   const filteredAppointments = eighteenPlus ? appointments.filter(item => item.min_age_limit === 18) : appointments;
 
   return (
+    <Box display="flex" flexDirection="row" justifyContent="center">
     <div style={{ padding: 20, backgroundColor: '#fafafa' }}>
       <Snackbar open={error} autoHideDuration={6000} onClose={() => setError(false)} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
         <Alert severity="warning">
@@ -82,7 +91,7 @@ const App = () => {
       <Box style={{ maxWidth: 340, marginTop: 10 }}>
         <Typography style={{marginTop: 20}} variant="button">PIN CODES (seperated by commas)</Typography>
         <TextField style={{width: 320}} value={pins} placeholder="eg. 110009, 201014, 390012" onChange={e => setPinCodes(e.target.value)} />
-        <Typography style={{marginTop: 20}} variant="button">DAYS</Typography>
+        <Typography style={{marginTop: 20}} variant="button">HOW MANY DAYS YOU WANT TO CHECK AVAILABILITY FOR?</Typography>
         <TextField style={{width: 320}} value={days} placeholder="e.g. 3" onChange={e => setDays(e.target.value)} />
         <Typography/>
         <Box display="flex" alignItems="center" style={{marginTop: 10}}>
@@ -97,6 +106,35 @@ const App = () => {
         <Button style={{marginTop: 20}} variant="contained" color="primary" onClick={getAppointments}>Get Appointments</Button>
       </Box>
       <div style={{ marginTop: 20 }}>
+        {loading &&
+          <Box>
+            <Skeleton variant="text" height={48} />
+            <Skeleton variant="text" height={32} width={128} style={{marginTop: -10}} />
+            <Box display="flex" flexDirection="row" justifyContent="flex-end">
+              <Skeleton variant="circle" height={20} width={20} style={{marginTop: -20, marginBottom: 10}}/>
+            </Box>
+            <Skeleton variant="rect" height={100} />
+
+            <Skeleton variant="text" height={48} style={{marginTop: 32}} />
+            <Skeleton variant="text" height={32} width={128} style={{marginTop: -10}} />
+            <Box display="flex" flexDirection="row" justifyContent="flex-end">
+              <Skeleton variant="circle" height={20} width={20} style={{marginTop: -20, marginBottom: 10}}/>
+            </Box>
+            <Skeleton variant="rect" height={100} />
+
+            <Skeleton variant="text" height={48} style={{marginTop: 32}} />
+            <Skeleton variant="text" height={32} width={128} style={{marginTop: -10}} />
+            <Box display="flex" flexDirection="row" justifyContent="flex-end">
+              <Skeleton variant="circle" height={20} width={20} style={{marginTop: -20, marginBottom: 10}}/>
+            </Box>
+            <Skeleton variant="rect" height={100} />
+          </Box>
+        }
+        {filteredAppointments.length === 0 && showEmpty &&
+          <Box display="flex" flexDirection="column" justifyContent="center" style={{height: 200}}>
+            <Typography variant="h5" style={{color: '#999', textAlign: 'center'}}>Nothing to show here...</Typography>
+          </Box>
+        }
         {filteredAppointments.map((appointment, index) => (
           <Card
             key={index.toString()}
@@ -142,6 +180,7 @@ const App = () => {
         ))}
       </div>
     </div>
+  </Box>
   );
 };
 

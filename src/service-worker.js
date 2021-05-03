@@ -70,3 +70,15 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
+Notification.requestPermission()
+.then(permission => {
+  setInterval(() => {
+    new Notification('Found Vaccination Slots', {
+      body: 'Visit the Vaccine Tracker App',
+      icon: `${window.location.href}/logo192.png`,
+    });
+  }, 7200000);
+})
+.catch(e => {
+  console.log(e);
+});
