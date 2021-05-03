@@ -25,7 +25,7 @@ const PinLookup = ({open, handleClose, setPins}) => {
       });
       setLoading(false);
       handleClose();
-      setPins(pins.join(', '));
+      setPins(pins.slice(0,5).join(', '));
       localStorage.setItem(PIN_LOOKUP, 'true');
     })
     .catch(e => {
