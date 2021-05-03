@@ -9,7 +9,7 @@ import clsx from 'clsx';
 
 import {getAppointmentsHelper} from '../helpers/vaccines';
 import PinLookup from '../components/PinLookup';
-import {PIN_LOOKUP, PINCODE} from '../config/constants';
+import {PINCODE} from '../config/constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
